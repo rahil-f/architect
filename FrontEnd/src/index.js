@@ -1,7 +1,7 @@
-const fetchApi = new FetchApi("sophie.bluel@test.tld", "S0phie")
+let connected = readCookie("token") ? true : false
 
-console.log(fetchApi)
-const user = await fetchApi.postFetch("http://localhost:5678/api/users/login", {"email": "sophie.bluel@test.tld", "password": "S0phie"})
+const fetchApi = new FetchApi()
+
 const cats = await fetchApi.getFetch("http://localhost:5678/api/categories")
 const cat = await fetchApi.getFetch("http://localhost:5678/api/works")
 
@@ -52,3 +52,14 @@ function createFigure(data) {
 }
 
 getCatagories("Tous");
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}

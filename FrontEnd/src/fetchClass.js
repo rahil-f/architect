@@ -1,7 +1,6 @@
 class FetchApi {
-    constructor(user, password) {
-        this.user = user;
-        this.password = password;
+    constructor() {
+        
     }
 
     async getFetch(url = "") {
