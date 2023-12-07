@@ -1,49 +1,56 @@
-let connected = readCookie("token") ? true : false
+let connected = readCookie("token") ? true : false;
 
 let selectedCategory = "Tous";
 
-const fetchApi = new FetchApi()
+const fetchApi = new FetchApi();
 
-const cats = await fetchApi.getFetch("http://localhost:5678/api/categories")
-const cat = await fetchApi.getFetch("http://localhost:5678/api/works")
+const cats = await fetchApi.getFetch("http://localhost:5678/api/categories");
+const cat = await fetchApi.getFetch("http://localhost:5678/api/works");
 
 if (connected) {
-    const editor = document.getElementsByClassName("editor")[0]
+    const editor = document.getElementsByClassName("editor")[0];
     editor.style.display = "flex";
-    const header = document.getElementsByTagName("header")[0]
+    const header = document.getElementsByTagName("header")[0];
     header.style.marginTop = "70px";
 }
 const categories = document.getElementsByClassName("categories")[0];
 const gallery = document.getElementsByClassName("gallery")[0];
-const modalImg = document.getElementsByClassName("modalImg")[0]
+const modalImg = document.getElementsByClassName("modalImg")[0];
 
 let categorie = document.createElement("button");
-categorie.addEventListener("click", () => getCatagories("Tous"))
+categorie.addEventListener("click", () => getCatagories("Tous"));
 categorie.classList.add("categorie");
 categorie.classList.add("categorie-selected");
-categorie.setAttribute("id","Tous");
+categorie.setAttribute("id", "Tous");
 categorie.innerHTML = "Tous";
 categories.appendChild(categorie);
 
-cats.forEach(element => {
+cats.forEach((element) => {
     let categorie = document.createElement("button");
-    categorie.addEventListener("click", () => getCatagories(element.name))
+    categorie.addEventListener("click", () => getCatagories(element.name));
     categorie.classList.add("categorie");
-    categorie.setAttribute("id",element.name);
+    categorie.setAttribute("id", element.name);
     categorie.innerHTML = element.name;
     categories.appendChild(categorie);
+
+    let option = document.createElement("option");
+    option.value = element.name;
+    option.innerHTML = element.name;
+    document.getElementById("categorie").appendChild(option);
 });
 
 function getCatagories(selected) {
     gallery.replaceChildren();
-    document.getElementsByClassName("categorie-selected")[0].classList.remove("categorie-selected");
+    document
+        .getElementsByClassName("categorie-selected")[0]
+        .classList.remove("categorie-selected");
     document.getElementById(selected).classList.add("categorie-selected");
-    cat.forEach(data => {
-        if (selected == "Tous") {
-            createFigure(data)
+    cat.forEach((data) => {
+        if (selected === "Tous") {
+            createFigure(data);
         } else {
-            if (selected == data.category.name) {
-                createFigure(data)
+            if (selected === data.category.name) {
+                createFigure(data);
             }
         }
     });
@@ -53,7 +60,7 @@ function createFigure(data) {
     let figure = document.createElement("figure");
     let img = document.createElement("img");
     let figcaption = document.createElement("figcaption");
-    
+
     img.src = data.imageUrl;
     figcaption.innerHTML = data.title;
     figure.appendChild(img);
@@ -64,30 +71,29 @@ function createFigure(data) {
 getCatagories("Tous");
 
 function readCookie(name) {
-	var nameEQ = name + "=";
-	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-	}
-	return null;
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == " ") c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
 }
 
 function loadModalImg(works) {
-
-    works.forEach(elem => {
+    works.forEach((elem) => {
         let img = document.createElement("img");
         let div1 = document.createElement("div");
         let btn = document.createElement("button");
         let i = document.createElement("i");
-        
+
         img.src = elem.imageUrl;
         div1.classList.add("pictureDiv");
-        btn.classList.add("btnDiv")
-        i.classList.add("fa-solid")
-        i.classList.add("fa-trash-can")
-        i.classList.add("fa-xs")
+        btn.classList.add("btnDiv");
+        i.classList.add("fa-solid");
+        i.classList.add("fa-trash-can");
+        i.classList.add("fa-xs");
 
         btn.addEventListener("click", () => deletePicture(elem));
 
@@ -101,7 +107,10 @@ function loadModalImg(works) {
 loadModalImg(cat);
 
 async function deletePicture(elem) {
-    let del = await fetchApi.deleteFetch(`http://localhost:5678/api/works/${elem.id}`, readCookie("token"))
-    modalImg.replaceChildren()
+    let del = await fetchApi.deleteFetch(
+        `http://localhost:5678/api/works/${elem.id}`,
+        readCookie("token")
+    );
+    modalImg.replaceChildren();
     loadModalImg(await fetchApi.getFetch("http://localhost:5678/api/works"));
 }

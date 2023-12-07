@@ -368,7 +368,7 @@ footer nav ul {
 }
 
 .list {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
@@ -436,5 +436,109 @@ footer nav ul {
 }
 
 .new {
-	display: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 36px;
+	padding: 60px 0
+}
+
+#newPicture > h2 {
+	color: #000;
+	text-align: center;
+	font-family: Work Sans;
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+
+.picture-box {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	width: 420px;
+	height: 169px;
+	border-radius: 3px;
+	background: #E8F1F6;
+}
+
+.picture-box > i {
+	/* width: 76px;
+	height: 76px; */
+}
+
+.picture-box > label {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 173px;
+	height: 36px;
+	border-radius: 50px;
+	background: #CBD6DC;
+	color: #306685;
+	text-align: center;
+	font-family: Work Sans;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 500;
+	line-height: normal;
+}
+
+.picture-box > label:hover {
+	background: #E8F1F6;
+	border: 2px solid #CBD6DC;
+}
+
+.picture-box > p {
+	color: #444;
+	text-align: center;
+	font-family: Work Sans;
+	font-size: 10px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+
+#newPicture {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: start;
+	gap: 10px;
+}
+
+#newPicture input[type="text"],
+#newPicture select {
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 420px;
+	height: 51px;
+	background: #FFF;
+	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+}
+
+#newPicture select {
+	margin-bottom: 50px;
+}
+
+#newPicture input[type="submit"] {
+	padding: 0;
+	border: none;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 237px;
+	height: 36px;
+	border-radius: 60px;
+	background: #A7A7A7;
 }

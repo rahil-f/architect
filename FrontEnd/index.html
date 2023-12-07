@@ -34,19 +34,22 @@
 	</div>
 	<div class="new">
 		<h2>Ajout photo</h2>
-		<div>
-			<i class="fa-regular fa-image fa-2xl"></i>
-			<button>+ Ajouter photo</button>
-			<p>jpg, png : 4mo max</p>
-		</div>
 		<form id="newPicture">
-            <label for="Titre">Titre</label>
-            <input type="text" id="Titre" name="Titre">
-            <label for="Categorie">Catégorie</label>
-            <input type="Categorie" id="Categorie" name="Categorie">
+			<div class="picture-box">
+				<i class="fa-regular fa-image fa-2xl"></i>
+				<label for="photo">
+					+ Ajouter photo
+					<input style="display:none;" type="file" id="photo" name="photo" accept="image/*" value="+ Ajouter photo" />
+				</label>
+				<p>jpg, png : 4mo max</p>
+			</div>
+            <label for="titre">Titre</label>
+            <input type="text" id="titre" name="titre">
+            <label for="categorie">Catégorie</label>
+            <select id="categorie" name="categorie"></select>
 			<p class="error-login">erreur img</p>
 			<div class="line"></div>
-            <input type="submit" value="Valider" id="submitPicure">
+            <input type="submit" value="Valider" id="submitPicure" disabled>
         </form>
 	</div>
 </div>
