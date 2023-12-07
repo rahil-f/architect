@@ -57,7 +57,8 @@ body {
 header {
 	display: flex;
 	justify-content: space-between;
-	margin: 50px 0
+	margin: 50px 0;
+	position: relative;
 }
 section {
 	margin: 50px 0
@@ -306,4 +307,134 @@ footer nav ul {
 	border: 1px solid red;
 	background: #FFF;
 	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+}
+
+/* editor mode */
+
+.editor {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	display: none;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	height: 59px;
+	background: #000;
+}
+
+.editor > i {
+	color:#FFF;
+	width: 15.58px;
+	height: 15.58px;
+}
+
+.editor > p {
+	color: #FFF;
+	text-align: center;
+	font-family: Work Sans;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+
+.project {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.modifier {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+/* modal */
+
+.modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 630px;
+	height: 688px;
+	border-radius: 10px;
+	background: #FFF;
+}
+
+.list {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 36px;
+	padding: 60px 0;
+}
+
+.list > h2 {
+	color: #000;
+	text-align: center;
+	font-family: Work Sans;
+	font-size: 26px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+}
+
+.list > button {
+	width: 237px;
+	height: 36px;
+	flex-shrink: 0;
+	border-radius: 60px;
+	background: #1D6154;
+}
+
+.modalImg {
+	display: grid;
+	grid-template-columns: 80px 80px 80px 80px 80px;
+	grid-template-rows: 104px 104px 104px 104px 104px;
+	gap: 5px;
+	height: 420px;
+	width: 420px;
+}
+
+.pictureDiv img {
+	width: 100%;
+	height: 100%;
+}
+
+.pictureDiv {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.btnDiv {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #000;
+	border-radius: 2px;
+	width: 17px;
+	height: 17px;
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	color:#FFF;
+	cursor: pointer;
+}
+
+.line {
+	width: 420px;
+	height: 1px;
+	background: #B3B3B3;
+}
+
+.new {
+	display: none;
 }

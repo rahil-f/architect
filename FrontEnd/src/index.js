@@ -1,12 +1,21 @@
 let connected = readCookie("token") ? true : false
 
+let selectedCategory = "Tous";
+
 const fetchApi = new FetchApi()
 
 const cats = await fetchApi.getFetch("http://localhost:5678/api/categories")
 const cat = await fetchApi.getFetch("http://localhost:5678/api/works")
 
+if (connected) {
+    const editor = document.getElementsByClassName("editor")[0]
+    editor.style.display = "flex";
+    const header = document.getElementsByTagName("header")[0]
+    header.style.marginTop = "70px";
+}
 const categories = document.getElementsByClassName("categories")[0];
 const gallery = document.getElementsByClassName("gallery")[0];
+const modalImg = document.getElementsByClassName("modalImg")[0]
 
 let categorie = document.createElement("button");
 categorie.addEventListener("click", () => getCatagories("Tous"))
@@ -24,6 +33,7 @@ cats.forEach(element => {
     categorie.innerHTML = element.name;
     categories.appendChild(categorie);
 });
+
 function getCatagories(selected) {
     gallery.replaceChildren();
     document.getElementsByClassName("categorie-selected")[0].classList.remove("categorie-selected");
@@ -62,4 +72,36 @@ function readCookie(name) {
 		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
 	}
 	return null;
+}
+
+function loadModalImg(works) {
+
+    works.forEach(elem => {
+        let img = document.createElement("img");
+        let div1 = document.createElement("div");
+        let btn = document.createElement("button");
+        let i = document.createElement("i");
+        
+        img.src = elem.imageUrl;
+        div1.classList.add("pictureDiv");
+        btn.classList.add("btnDiv")
+        i.classList.add("fa-solid")
+        i.classList.add("fa-trash-can")
+        i.classList.add("fa-xs")
+
+        btn.addEventListener("click", () => deletePicture(elem));
+
+        btn.appendChild(i);
+        div1.appendChild(btn);
+        div1.appendChild(img);
+        modalImg.appendChild(div1);
+    });
+}
+
+loadModalImg(cat);
+
+async function deletePicture(elem) {
+    let del = await fetchApi.deleteFetch(`http://localhost:5678/api/works/${elem.id}`, readCookie("token"))
+    modalImg.replaceChildren()
+    loadModalImg(await fetchApi.getFetch("http://localhost:5678/api/works"));
 }
