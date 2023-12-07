@@ -16,6 +16,8 @@ async function credentialTest(e) {
         window.location.href = "../index.html";
         return true
     }
+    const errorLogin = document.getElementsByClassName("error-login")[0]
+    errorLogin.style.display = "flex";
     return false
 }
 
