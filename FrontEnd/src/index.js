@@ -125,6 +125,7 @@ const modalBack = document.getElementsByClassName("fa-arrow-left")[0];
 const buttonNew = document.querySelectorAll(".list button");
 const editorBanner = document.getElementsByClassName("editor")[0];
 const modifier = document.getElementsByClassName('modifier')[0];
+const body = document.getElementsByTagName('body')[0];
 
 editorBanner.addEventListener('click', openModal);
 modifier.addEventListener("click", openModal);
@@ -136,6 +137,7 @@ function openModal() {
     modal.style.display = "flex";
     listPart.style.display = "flex";
     modalCross.style.display = "block";
+    body.style.overflow = "hidden";
 }
 
 function openNew() {
@@ -156,6 +158,7 @@ function closeModal() {
     newPart.style.display = "none";
     modalCross.style.display = "none";
     modalBack.style.display = "none";
+    body.style.overflow = "scroll";
 }
 
 window.onclick = function (event) {
