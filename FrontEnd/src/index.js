@@ -114,3 +114,52 @@ async function deletePicture(elem) {
     modalImg.replaceChildren();
     loadModalImg(await fetchApi.getFetch("http://localhost:5678/api/works"));
 }
+
+//modal
+
+const modal = document.getElementsByClassName("modal")[0];
+const listPart = document.getElementsByClassName("list")[0];
+const newPart = document.getElementsByClassName("new")[0];
+const modalCross = document.getElementsByClassName("fa-xmark")[0];
+const modalBack = document.getElementsByClassName("fa-arrow-left")[0];
+const buttonNew = document.querySelectorAll(".list button");
+const editorBanner = document.getElementsByClassName("editor")[0];
+const modifier = document.getElementsByClassName('modifier')[0];
+
+editorBanner.addEventListener('click', openModal);
+modifier.addEventListener("click", openModal);
+modalCross.addEventListener("click", closeModal);
+modalBack.addEventListener("click", openList);
+buttonNew[buttonNew.length - 1].addEventListener('click', openNew);
+
+function openModal() {
+    modal.style.display = "flex";
+    listPart.style.display = "flex";
+    modalCross.style.display = "block";
+}
+
+function openNew() {
+    listPart.style.display = "none";
+    newPart.style.display = "flex";
+    modalBack.style.display = "block";
+}
+
+function openList() {
+    listPart.style.display = "flex";
+    newPart.style.display = "none";
+    modalBack.style.display = "none";
+}
+
+function closeModal() {
+    modal.style.display = "none";
+    listPart.style.display = "none";
+    newPart.style.display = "none";
+    modalCross.style.display = "none";
+    modalBack.style.display = "none";
+}
+
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+};
