@@ -1,39 +1,37 @@
 class FetchApi {
-    constructor() {
-        
-    }
+    constructor() {}
 
     async getFetch(url = "") {
         return await fetch(url)
-        .then(response => response.json())
-        .catch(error => console.log(error.message))
-    };
+            .then((response) => response.json())
+            .catch((error) => console.log(error.message));
+    }
 
     async postFetch(url = "", data = {}) {
         return await fetch(url, {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                "Content-Type": "application/json",
+                Accept: "application/json",
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data),
         })
-        .then(resp => resp.json())
-        .catch(error => console.log(error.message))
-    };
+            .then((resp) => resp.json())
+            .catch((error) => console.log(error.message));
+    }
 
     async deleteFetch(url = "", token = null) {
-        console.log(url, `Bearer ${token}`)
+        console.log(url, `Bearer ${token}`);
         return await fetch(url, {
-            method: 'DELETE',
+            method: "DELETE",
             headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
             },
-            body: null
+            body: null,
         })
-            .then(resp => resp.ok)
-        .catch(error => console.log(error.message))
-    };
+            .then((resp) => resp.ok)
+            .catch((error) => console.log(error.message));
+    }
 }

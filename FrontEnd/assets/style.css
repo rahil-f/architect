@@ -570,3 +570,8 @@ footer nav ul {
 	border-radius: 60px;
 	background: #A7A7A7;
 }
+
+.photo-img {
+	height: 100%;
+	display: none;
+}

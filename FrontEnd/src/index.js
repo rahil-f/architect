@@ -124,14 +124,14 @@ const modalCross = document.getElementsByClassName("fa-xmark")[0];
 const modalBack = document.getElementsByClassName("fa-arrow-left")[0];
 const buttonNew = document.querySelectorAll(".list button");
 const editorBanner = document.getElementsByClassName("editor")[0];
-const modifier = document.getElementsByClassName('modifier')[0];
-const body = document.getElementsByTagName('body')[0];
+const modifier = document.getElementsByClassName("modifier")[0];
+const body = document.getElementsByTagName("body")[0];
 
-editorBanner.addEventListener('click', openModal);
+editorBanner.addEventListener("click", openModal);
 modifier.addEventListener("click", openModal);
 modalCross.addEventListener("click", closeModal);
 modalBack.addEventListener("click", openList);
-buttonNew[buttonNew.length - 1].addEventListener('click', openNew);
+buttonNew[buttonNew.length - 1].addEventListener("click", openNew);
 
 function openModal() {
     modal.style.display = "flex";
@@ -166,3 +166,25 @@ window.onclick = function (event) {
         modal.style.display = "none";
     }
 };
+
+const photo = document.getElementById("photo");
+const photoImg = document.getElementsByClassName("photo-img")[0];
+let imageToSend
+photo.addEventListener("change", printImage);
+
+function printImage() {
+    photoImg.style.display = "block";
+    document.querySelector(".picture-box i").style.display = "none";
+    document.querySelector(".picture-box label").style.display = "none";
+    document.querySelector(".picture-box p").style.display = "none";
+    imageToSend = this.files[0];
+    let reader = new FileReader();
+
+    photoImg.title = imageToSend.name;
+
+    reader.onload = function (event) {
+        photoImg.src = event.target.result;
+    };
+
+    reader.readAsDataURL(imageToSend);
+}
