@@ -7,15 +7,31 @@ const fetchApi = new FetchApi();
 const cats = await fetchApi.getFetch("http://localhost:5678/api/categories");
 const cat = await fetchApi.getFetch("http://localhost:5678/api/works");
 
-if (connected) {
-    const editor = document.getElementsByClassName("editor")[0];
-    editor.style.display = "flex";
-    const header = document.getElementsByTagName("header")[0];
-    header.style.marginTop = "70px";
-}
+const editor = document.getElementsByClassName("editor")[0];
+const header = document.getElementsByTagName("header")[0];
+const modifier = document.getElementsByClassName("modifier")[0];
+const modal = document.getElementsByClassName("modal")[0];
+const listPart = document.getElementsByClassName("list")[0];
+const newPart = document.getElementsByClassName("new")[0];
+const modalCross = document.getElementsByClassName("fa-xmark")[0];
+const modalBack = document.getElementsByClassName("fa-arrow-left")[0];
+const buttonNew = document.querySelectorAll(".list button");
+const editorBanner = document.getElementsByClassName("editor")[0];
+const body = document.getElementsByTagName("body")[0];
 const categories = document.getElementsByClassName("categories")[0];
 const gallery = document.getElementsByClassName("gallery")[0];
 const modalImg = document.getElementsByClassName("modalImg")[0];
+const photo = document.getElementById("photo");
+const photoImg = document.getElementsByClassName("photo-img")[0];
+const validateNewPicture = document.getElementById("submitPicure");
+const title = document.getElementById("titre");
+const selectedCat = document.getElementById("categorie");
+
+if (connected) {
+    editor.style.display = "flex";
+    header.style.marginTop = "70px";
+    modifier.style.display = "flex";
+}
 
 let categorie = document.createElement("button");
 categorie.addEventListener("click", () => getCatagories("Tous"));
@@ -34,7 +50,7 @@ cats.forEach((element) => {
     categories.appendChild(categorie);
 
     let option = document.createElement("option");
-    option.value = element.name;
+    option.value = element.id;
     option.innerHTML = element.name;
     document.getElementById("categorie").appendChild(option);
 });
@@ -117,16 +133,6 @@ async function deletePicture(elem) {
 
 //modal
 
-const modal = document.getElementsByClassName("modal")[0];
-const listPart = document.getElementsByClassName("list")[0];
-const newPart = document.getElementsByClassName("new")[0];
-const modalCross = document.getElementsByClassName("fa-xmark")[0];
-const modalBack = document.getElementsByClassName("fa-arrow-left")[0];
-const buttonNew = document.querySelectorAll(".list button");
-const editorBanner = document.getElementsByClassName("editor")[0];
-const modifier = document.getElementsByClassName("modifier")[0];
-const body = document.getElementsByTagName("body")[0];
-
 editorBanner.addEventListener("click", openModal);
 modifier.addEventListener("click", openModal);
 modalCross.addEventListener("click", closeModal);
@@ -163,14 +169,14 @@ function closeModal() {
 
 window.onclick = function (event) {
     if (event.target == modal) {
-        modal.style.display = "none";
+        closeModal();
     }
 };
 
-const photo = document.getElementById("photo");
-const photoImg = document.getElementsByClassName("photo-img")[0];
-let imageToSend
+let imageToSend;
+let imageToSend2;
 photo.addEventListener("change", printImage);
+photo.addEventListener("change", onChangePicture);
 
 function printImage() {
     photoImg.style.display = "block";
@@ -179,12 +185,73 @@ function printImage() {
     document.querySelector(".picture-box p").style.display = "none";
     imageToSend = this.files[0];
     let reader = new FileReader();
-
     photoImg.title = imageToSend.name;
-
+    
     reader.onload = function (event) {
-        photoImg.src = event.target.result;
+        //photoImg.src = event.target.result;
+        //imageToSend = event.target.result;
+        console.log(typeof(imageToSend))
     };
+    
+    //reader.readAsBinaryString(imageToSend);
+    
+    let reader1 = new FileReader();
+    
+    photoImg.title = imageToSend.name;
+    
+    reader1.onload = function (event) {
+        photoImg.src = event.target.result;
+        imageToSend2 = event.target.result;
+        console.log(typeof(imageToSend));
+    };
+    
+    reader1.readAsDataURL(imageToSend);
+    const formData = new FormData();
+    formData.append("image", imageToSend);
 
-    reader.readAsDataURL(imageToSend);
+    imageToSend = formData;
+    for (var pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+    }
+    //console.log(formData, imageToSend)
+}
+
+validateNewPicture.addEventListener("click", addPicture);
+
+title.addEventListener("input", onChangePicture);
+selectedCat.addEventListener("input", onChangePicture);
+
+function onChangePicture() {
+    if (selectedCat.value && title.value != "" && imageToSend) {
+        validateNewPicture.removeAttribute("disabled");
+        return true;
+    }
+    validateNewPicture.setAttribute("disabled", "");
+    return false;
+}
+
+async function addPicture(e) {
+    e.preventDefault();
+    if (selectedCat.value && title.value != "" && imageToSend) {
+        console.log(typeof imageToSend);
+        let add = await fetchApi.postFetch(
+            `http://localhost:5678/api/works`,
+            `multipart/form-data`,
+            {
+                image: imageToSend,
+                title: title.value,
+                category: Number(selectedCat.value),
+            },
+            readCookie("token")
+        );
+        console.log("add", add);
+        // modalImg.replaceChildren();
+        // loadModalImg(
+        //     await fetchApi.getFetch("http://localhost:5678/api/works")
+        //     );
+        return true;
+    }
+    // const errorLogin = document.getElementsByClassName("error-login")[0];
+    // errorLogin.style.display = "flex";
+    return false;
 }

@@ -7,13 +7,22 @@ class FetchApi {
             .catch((error) => console.log(error.message));
     }
 
-    async postFetch(url = "", data = {}) {
+    async postFetch(url = "", content = "application/json", data = {}, token = "") {
+        console.log(content)
         return await fetch(url, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            },
+            headers:
+                content === ""
+                    ? {
+                          //"Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}`,
+                          //Accept: "application/json",
+                          Authorization: token !== "" ? `Bearer ${token}` : "",
+                      }
+                    : {
+                          "Content-Type": content,
+                          Accept: "application/json",
+                          Authorization: token !== "" ? `Bearer ${token}` : "",
+                      },
             body: JSON.stringify(data),
         })
             .then((resp) => resp.json())

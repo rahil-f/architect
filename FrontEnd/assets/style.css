@@ -125,7 +125,6 @@ li:hover {
 }
 #portfolio h2 {
 	text-align: center;
-	margin-bottom: 1em;
 }
 .gallery {
 	width: 100%;
@@ -346,14 +345,17 @@ footer nav ul {
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
+	gap: 15px;
 }
 
 .modifier {
-	display: flex;
+	display: none;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: start;
 	align-items: center;
 	cursor: pointer;
+	height: 100%;
+	gap: 5px;
 }
 
 /* modal */
@@ -568,6 +570,10 @@ footer nav ul {
 	width: 237px;
 	height: 36px;
 	border-radius: 60px;
+	background: #1D6154;
+}
+
+#newPicture input[type="submit"]:disabled {
 	background: #A7A7A7;
 }
 
