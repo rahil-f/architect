@@ -1,12 +1,13 @@
-let connected = readCookie("token") ? true : false;
+let connected = readCookie("token") ? true : false; // verification de la connexion par le token
 
-let selectedCategory = "Tous";
+let selectedCategory = "Tous"; // categorie de base
 
-const fetchApi = new FetchApi();
+const fetchApi = new FetchApi(); // novelle instance de la classe fetch
 
-const cats = await fetchApi.getFetch("http://localhost:5678/api/categories");
-const cat = await fetchApi.getFetch("http://localhost:5678/api/works");
+const cats = await fetchApi.getFetch("http://localhost:5678/api/categories"); // recuperation des categories
+const cat = await fetchApi.getFetch("http://localhost:5678/api/works"); // recuperation des images
 
+// recuperation des elements necessaires
 const editor = document.getElementsByClassName("editor")[0];
 const header = document.getElementsByTagName("header")[0];
 const modifier = document.getElementsByClassName("modifier")[0];
@@ -21,47 +22,73 @@ const body = document.getElementsByTagName("body")[0];
 const categories = document.getElementsByClassName("categories")[0];
 const gallery = document.getElementsByClassName("gallery")[0];
 const modalImg = document.getElementsByClassName("modalImg")[0];
-const photo = document.getElementById("photo");
+const photo = document.getElementById("image");
 const photoImg = document.getElementsByClassName("photo-img")[0];
-const validateNewPicture = document.getElementById("submitPicure");
-const title = document.getElementById("titre");
-const selectedCat = document.getElementById("categorie");
+const validateNewPicture = document.getElementById("submitPicture");
+const formNewPicture = document.getElementById("newPicture");
+const title = document.getElementById("title");
+const selectedCat = document.getElementById("category");
+const loginlink = document.getElementById("login");
+const project = document.getElementsByClassName("project")[0];
 
+// si connecté creation des elements necessaires
 if (connected) {
     editor.style.display = "flex";
     header.style.marginTop = "70px";
     modifier.style.display = "flex";
+    loginlink.textContent = "Logout";
+    categories.style.display = "none";
+    project.style.marginBottom = "51px"
 }
 
+// creation de la catagorie "Tous"
 let categorie = document.createElement("button");
-categorie.addEventListener("click", () => getCatagories("Tous"));
+categorie.addEventListener("click", () => getCatagories("Tous", cat));
 categorie.classList.add("categorie");
 categorie.classList.add("categorie-selected");
 categorie.setAttribute("id", "Tous");
 categorie.innerHTML = "Tous";
 categories.appendChild(categorie);
 
+// creation des categories depuis la variable des categories
 cats.forEach((element) => {
     let categorie = document.createElement("button");
-    categorie.addEventListener("click", () => getCatagories(element.name));
+    categorie.addEventListener("click", () => getCatagories(element.name, cat));
     categorie.classList.add("categorie");
     categorie.setAttribute("id", element.name);
     categorie.innerHTML = element.name;
     categories.appendChild(categorie);
-
+    
     let option = document.createElement("option");
     option.value = element.id;
     option.innerHTML = element.name;
-    document.getElementById("categorie").appendChild(option);
+    document.getElementById("category").appendChild(option);
 });
 
-function getCatagories(selected) {
+//listener sur le bouton de deconnexion
+loginlink.addEventListener("click", () => logout());
+
+// fonction de deconnexion
+function logout() {
+    console.log("logout", connected);
+    editor.style.display = "none";
+    header.style.marginTop = "50px";
+    modifier.style.display = "none";
+    loginlink.textContent = "Login";
+    categories.display = "flex";
+    project.style.marginBottom = "0";
+    connected = false;
+    deleteCokies("token");
+}
+
+// fct creation des images en fonction de la categorie selectionnée 
+function getCatagories(selected, datas) {
     gallery.replaceChildren();
     document
         .getElementsByClassName("categorie-selected")[0]
         .classList.remove("categorie-selected");
     document.getElementById(selected).classList.add("categorie-selected");
-    cat.forEach((data) => {
+    datas.forEach((data) => {
         if (selected === "Tous") {
             createFigure(data);
         } else {
@@ -71,6 +98,8 @@ function getCatagories(selected) {
         }
     });
 }
+
+getCatagories("Tous", cat);
 
 function createFigure(data) {
     let figure = document.createElement("figure");
@@ -84,8 +113,7 @@ function createFigure(data) {
     gallery.appendChild(figure);
 }
 
-getCatagories("Tous");
-
+// fct qui recupere un token depuis son nom et qui le retourne si trouvé ou retourne null
 function readCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(";");
@@ -97,6 +125,16 @@ function readCookie(name) {
     return null;
 }
 
+// fct qui supprime un token
+function deleteCokies(name) {
+    const co = readCookie(name);
+    if (co) {
+        document.cookie =
+            name + "=" +co+ "; expires=Thu, 01 Jan 1970 00:00:01 GMT" + "; path=/";
+    }
+}
+
+// fct pour creer les images du modal pour la suppresion
 function loadModalImg(works) {
     works.forEach((elem) => {
         let img = document.createElement("img");
@@ -122,6 +160,7 @@ function loadModalImg(works) {
 
 loadModalImg(cat);
 
+// fct qui supprime une image
 async function deletePicture(elem) {
     let del = await fetchApi.deleteFetch(
         `http://localhost:5678/api/works/${elem.id}`,
@@ -129,10 +168,13 @@ async function deletePicture(elem) {
     );
     modalImg.replaceChildren();
     loadModalImg(await fetchApi.getFetch("http://localhost:5678/api/works"));
+    getCatagories(
+        "Tous",
+        await fetchApi.getFetch("http://localhost:5678/api/works")
+    );
 }
 
 //modal
-
 editorBanner.addEventListener("click", openModal);
 modifier.addEventListener("click", openModal);
 modalCross.addEventListener("click", closeModal);
@@ -140,10 +182,16 @@ modalBack.addEventListener("click", openList);
 buttonNew[buttonNew.length - 1].addEventListener("click", openNew);
 
 function openModal() {
+    const topWindow = document.documentElement.scrollTop || document.body.scrollTop;
+    const leftWindow = document.documentElement.scrollLeft || document.body.scrollLeft;
+    console.log(topWindow, leftWindow)
     modal.style.display = "flex";
+    modal.style.top = topWindow+"px";
+    modal.style.left = leftWindow + "px";
     listPart.style.display = "flex";
     modalCross.style.display = "block";
     body.style.overflow = "hidden";
+
 }
 
 function openNew() {
@@ -178,49 +226,33 @@ let imageToSend2;
 photo.addEventListener("change", printImage);
 photo.addEventListener("change", onChangePicture);
 
+// fct qui recupere l'image depuis le modal pour ml'afficher et la stocker pour l'envoie
 function printImage() {
     photoImg.style.display = "block";
     document.querySelector(".picture-box i").style.display = "none";
     document.querySelector(".picture-box label").style.display = "none";
     document.querySelector(".picture-box p").style.display = "none";
     imageToSend = this.files[0];
-    let reader = new FileReader();
     photoImg.title = imageToSend.name;
-    
-    reader.onload = function (event) {
-        //photoImg.src = event.target.result;
-        //imageToSend = event.target.result;
-        console.log(typeof(imageToSend))
-    };
-    
-    //reader.readAsBinaryString(imageToSend);
-    
+
     let reader1 = new FileReader();
     
     photoImg.title = imageToSend.name;
     
     reader1.onload = function (event) {
         photoImg.src = event.target.result;
-        imageToSend2 = event.target.result;
+        imageToSend = event.target.result;
         console.log(typeof(imageToSend));
     };
     
     reader1.readAsDataURL(imageToSend);
-    const formData = new FormData();
-    formData.append("image", imageToSend);
-
-    imageToSend = formData;
-    for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-    }
-    //console.log(formData, imageToSend)
 }
 
-validateNewPicture.addEventListener("click", addPicture);
 
 title.addEventListener("input", onChangePicture);
 selectedCat.addEventListener("input", onChangePicture);
 
+// fct qui verifie si le bouton d'envoi de nouvelle image peut etre activé
 function onChangePicture() {
     if (selectedCat.value && title.value != "" && imageToSend) {
         validateNewPicture.removeAttribute("disabled");
@@ -230,28 +262,27 @@ function onChangePicture() {
     return false;
 }
 
-async function addPicture(e) {
+// listener qui ecoute le submit de la nouvelle image
+formNewPicture.addEventListener("submit", async function (e) {
     e.preventDefault();
     if (selectedCat.value && title.value != "" && imageToSend) {
-        console.log(typeof imageToSend);
+        const formData = new FormData(formNewPicture);
         let add = await fetchApi.postFetch(
             `http://localhost:5678/api/works`,
-            `multipart/form-data`,
-            {
-                image: imageToSend,
-                title: title.value,
-                category: Number(selectedCat.value),
-            },
+            ``,
+            formData,
             readCookie("token")
         );
         console.log("add", add);
-        // modalImg.replaceChildren();
-        // loadModalImg(
-        //     await fetchApi.getFetch("http://localhost:5678/api/works")
-        //     );
-        return true;
+        if (add.id) {
+            closeModal()
+            getCatagories("Tous", await fetchApi.getFetch("http://localhost:5678/api/works"));
+        } else {
+            const errorLogin = document.getElementsByClassName("error-login")[0];
+            errorLogin.style.display = "flex";
+        }
+    } else {
+        alert("Vous n'avez pas rempli tous les champs");
     }
-    // const errorLogin = document.getElementsByClassName("error-login")[0];
-    // errorLogin.style.display = "flex";
-    return false;
-}
+    //document.querySelector(".gallery").innerHTML = "";
+})

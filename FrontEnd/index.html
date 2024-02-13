@@ -36,23 +36,23 @@
 		</div>
 		<div class="new">
 			<h2>Ajout photo</h2>
-			<form id="newPicture">
+			<form id="newPicture" enctype="multipart/form-data" method="post">
 				<div class="picture-box">
 					<i class="fa-regular fa-image fa-2xl"></i>
-					<label for="photo">
+					<label for="image">
 						+ Ajouter photo
-						<input style="display:none;" type="file" id="photo" name="photo" accept="image/*"/>
+						<input style="display:none;" type="file" id="image" name="image" accept="image/*" size="32000000"/>
 					</label>
 					<p>jpg, png : 4mo max</p>
 					<img class="photo-img" src="" alt="">
 				</div>
-				<label for="titre">Titre</label>
-				<input type="text" id="titre" name="titre">
-				<label for="categorie">Catégorie</label>
-				<select id="categorie" name="categorie"></select>
+				<label for="title">Titre</label>
+				<input type="text" id="title" name="title">
+				<label for="category">Catégorie</label>
+				<select id="category" name="category"></select>
 				<p class="error-login">erreur img</p>
 				<div class="line"></div>
-				<input type="submit" value="Valider" id="submitPicure" disabled>
+				<input type="submit" value="Valider" id="submitPicture" disabled>
 			</form>
 		</div>
 	</div>
@@ -63,7 +63,7 @@
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<li><a href="./src/login.html">login</a></li>
+			<li><a id="login" href="./src/login.html">Login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
