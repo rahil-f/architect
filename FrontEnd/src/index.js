@@ -137,25 +137,30 @@ function deleteCokies(name) {
 // fct pour creer les images du modal pour la suppresion
 function loadModalImg(works) {
     works.forEach((elem) => {
-        let img = document.createElement("img");
-        let div1 = document.createElement("div");
-        let btn = document.createElement("button");
-        let i = document.createElement("i");
-
-        img.src = elem.imageUrl;
-        div1.classList.add("pictureDiv");
-        btn.classList.add("btnDiv");
-        i.classList.add("fa-solid");
-        i.classList.add("fa-trash-can");
-        i.classList.add("fa-xs");
-
-        btn.addEventListener("click", () => deletePicture(elem));
-
-        btn.appendChild(i);
-        div1.appendChild(btn);
-        div1.appendChild(img);
-        modalImg.appendChild(div1);
+        addNewImageModal(elem);
     });
+}
+
+//add new image modal
+function addNewImageModal(data) {
+    let img = document.createElement("img");
+    let div1 = document.createElement("div");
+    let btn = document.createElement("button");
+    let i = document.createElement("i");
+
+    img.src = data.imageUrl;
+    div1.classList.add("pictureDiv");
+    btn.classList.add("btnDiv");
+    i.classList.add("fa-solid");
+    i.classList.add("fa-trash-can");
+    i.classList.add("fa-xs");
+
+    btn.addEventListener("click", () => deletePicture(data));
+
+    btn.appendChild(i);
+    div1.appendChild(btn);
+    div1.appendChild(img);
+    modalImg.appendChild(div1);
 }
 
 loadModalImg(cat);
@@ -277,6 +282,17 @@ formNewPicture.addEventListener("submit", async function (e) {
         if (add.id) {
             closeModal()
             getCatagories("Tous", await fetchApi.getFetch("http://localhost:5678/api/works"));
+            //reset modal state
+            title.value = "";
+            selectedCat.options[0].selected = true;
+            photoImg.style.display = "none";
+            document.querySelector(".picture-box i").style.display = "flex";
+            document.querySelector(".picture-box label").style.display = "flex";
+            document.querySelector(".picture-box p").style.display = "flex";
+
+            //create new image inside modal
+            addNewImageModal(add);
+            
         } else {
             const errorLogin = document.getElementsByClassName("error-login")[0];
             errorLogin.style.display = "flex";
